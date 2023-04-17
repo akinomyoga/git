@@ -253,19 +253,19 @@ __git_reassemble_comp_words_by_ref()
 		# word separator characters to the current word.
 		first=t
 		while
-			[ $i -gt 0 ] &&
+			[ "$i" -gt 0 ] &&
 			[ -n "${COMP_WORDS[$i]}" ] &&
 			# word consists of excluded word separators
 			[ "${COMP_WORDS[$i]//[^$exclude]}" = "${COMP_WORDS[$i]}" ]
 		do
 			# Attach to the previous token,
 			# unless the previous token is the command name.
-			if [ $j -ge 2 ] && [ -n "$first" ]; then
+			if [ "$j" -ge 2 ] && [ -n "$first" ]; then
 				((j--))
 			fi
 			first=
 			words_[$j]=${words_[j]}${COMP_WORDS[i]}
-			if [ $i = $COMP_CWORD ]; then
+			if [ "$i" = "$COMP_CWORD" ]; then
 				cword_=$j
 			fi
 			if (($i < ${#COMP_WORDS[@]} - 1)); then
@@ -276,7 +276,7 @@ __git_reassemble_comp_words_by_ref()
 			fi
 		done
 		words_[$j]=${words_[j]}${COMP_WORDS[i]}
-		if [ $i = $COMP_CWORD ]; then
+		if [ "$i" = "$COMP_CWORD" ]; then
 			cword_=$j
 		fi
 	done
@@ -292,7 +292,7 @@ _get_comp_words_by_ref ()
 	fi
 	__git_reassemble_comp_words_by_ref "$exclude"
 	cur_=${words_[cword_]}
-	while [ $# -gt 0 ]; do
+	while [ "$#" -gt 0 ]; do
 		case "$1" in
 		cur)
 			cur=$cur_
@@ -848,7 +848,7 @@ __git_complete_refs ()
 {
 	local remote= dwim= pfx= cur_="$cur" sfx=" " mode="refs"
 
-	while test $# != 0; do
+	while test "$#" != 0; do
 		case "$1" in
 		--remote=*)	remote="${1##--remote=}" ;;
 		--dwim)		dwim="yes" ;;
@@ -1036,7 +1036,7 @@ __git_complete_remote_or_refspec ()
 	if [ "$cmd" = "remote" ]; then
 		((c++))
 	fi
-	while [ $c -lt $cword ]; do
+	while [ "$c" -lt "$cword" ]; do
 		i="${words[c]}"
 		case "$i" in
 		--mirror) [ "$cmd" = "push" ] && no_complete_refspec=1 ;;
@@ -1060,7 +1060,7 @@ __git_complete_remote_or_refspec ()
 		__gitcomp_nl "$(__git_remotes)"
 		return
 	fi
-	if [ $no_complete_refspec = 1 ]; then
+	if [ "$no_complete_refspec" = 1 ]; then
 		return
 	fi
 	[ "$remote" = "." ] && remote=
@@ -1080,21 +1080,21 @@ __git_complete_remote_or_refspec ()
 	esac
 	case "$cmd" in
 	fetch)
-		if [ $lhs = 1 ]; then
+		if [ "$lhs" = 1 ]; then
 			__git_complete_fetch_refspecs "$remote" "$pfx" "$cur_"
 		else
 			__git_complete_refs --pfx="$pfx" --cur="$cur_"
 		fi
 		;;
 	pull|remote)
-		if [ $lhs = 1 ]; then
+		if [ "$lhs" = 1 ]; then
 			__git_complete_refs --remote="$remote" --pfx="$pfx" --cur="$cur_"
 		else
 			__git_complete_refs --pfx="$pfx" --cur="$cur_"
 		fi
 		;;
 	push)
-		if [ $lhs = 1 ]; then
+		if [ "$lhs" = 1 ]; then
 			__git_complete_refs --pfx="$pfx" --cur="$cur_"
 		else
 			__git_complete_refs --remote="$remote" --pfx="$pfx" --cur="$cur_"
@@ -1203,7 +1203,7 @@ __git_find_on_cmdline ()
 {
 	local word c="$__git_cmd_idx" show_idx
 
-	while test $# -gt 1; do
+	while test "$#" -gt 1; do
 		case "$1" in
 		--show-idx)	show_idx=y ;;
 		*)		return 1 ;;
@@ -1212,7 +1212,7 @@ __git_find_on_cmdline ()
 	done
 	local wordlist="$1"
 
-	while [ $c -lt $cword ]; do
+	while [ "$c" -lt "$cword" ]; do
 		for word in $wordlist; do
 			if [ "$word" = "${words[c]}" ]; then
 				if [ -n "${show_idx-}" ]; then
@@ -1237,7 +1237,7 @@ __git_find_last_on_cmdline ()
 {
 	local word c=$cword show_idx
 
-	while test $# -gt 1; do
+	while test "$#" -gt 1; do
 		case "$1" in
 		--show-idx)	show_idx=y ;;
 		*)		return 1 ;;
@@ -1246,7 +1246,7 @@ __git_find_last_on_cmdline ()
 	done
 	local wordlist="$1"
 
-	while [ $c -gt "$__git_cmd_idx" ]; do
+	while [ "$c" -gt "$__git_cmd_idx" ]; do
 		((c--))
 		for word in $wordlist; do
 			if [ "$word" = "${words[c]}" ]; then
@@ -1286,7 +1286,7 @@ __git_get_option_value ()
 	config_key="$4"
 
 	((c = $cword - 1))
-	while [ $c -ge 0 ]; do
+	while [ "$c" -ge 0 ]; do
 		word="${words[c]}"
 		for val in $values; do
 			if [ "$short_opt$val" = "$word" ] ||
@@ -1308,7 +1308,7 @@ __git_get_option_value ()
 __git_has_doubledash ()
 {
 	local c=1
-	while [ $c -lt $cword ]; do
+	while [ "$c" -lt "$cword" ]; do
 		if [ "--" = "${words[c]}" ]; then
 			return 0
 		fi
@@ -1474,7 +1474,7 @@ _git_branch ()
 {
 	local i c="$__git_cmd_idx" only_local_ref="n" has_r="n"
 
-	while [ $c -lt $cword ]; do
+	while [ "$c" -lt "$cword" ]; do
 		i="${words[c]}"
 		case "$i" in
 		-d|-D|--delete|-m|-M|--move|-c|-C|--copy)
@@ -1493,7 +1493,7 @@ _git_branch ()
 		__gitcomp_builtin branch
 		;;
 	*)
-		if [ $only_local_ref = "y" -a $has_r = "n" ]; then
+		if [ "$only_local_ref" = "y" -a "$has_r" = "n" ]; then
 			__gitcomp_direct "$(__git_heads "" "$cur" " ")"
 		else
 			__git_complete_refs
@@ -1897,7 +1897,7 @@ __git_match_ctag () {
 __git_complete_symbol () {
 	local tags=tags pfx="" cur_="${cur-}" sfx=" "
 
-	while test $# != 0; do
+	while test "$#" != 0; do
 		case "$1" in
 		--tags=*)	tags="${1##--tags=}" ;;
 		--pfx=*)	pfx="${1##--pfx=}" ;;
@@ -2166,7 +2166,7 @@ _git_mv ()
 		;;
 	esac
 
-	if [ $(__git_count_arguments "mv") -gt 0 ]; then
+	if [ "$(__git_count_arguments "mv")" -gt 0 ]; then
 		# We need to show both cached and untracked files (including
 		# empty directories) since this may not be the last argument.
 		__git_complete_index_file "--cached --others --directory"
@@ -2496,7 +2496,7 @@ _git_switch ()
 __git_config_get_set_variables ()
 {
 	local prevword word config_file= c=$cword
-	while [ $c -gt "$__git_cmd_idx" ]; do
+	while [ "$c" -gt "$__git_cmd_idx" ]; do
 		word="${words[c]}"
 		case "$word" in
 		--system|--global|--local|--file=*)
@@ -2541,7 +2541,7 @@ __git_complete_config_variable_value ()
 {
 	local varname="$prev" cur_="$cur"
 
-	while test $# != 0; do
+	while test "$#" != 0; do
 		case "$1" in
 		--varname=*)	varname="${1##--varname=}" ;;
 		--cur=*)	cur_="${1##--cur=}" ;;
@@ -2656,7 +2656,7 @@ __git_complete_config_variable_name ()
 {
 	local cur_="$cur" sfx
 
-	while test $# != 0; do
+	while test "$#" != 0; do
 		case "$1" in
 		--cur=*)	cur_="${1##--cur=}" ;;
 		--sfx=*)	sfx="${1##--sfx=}" ;;
@@ -2756,7 +2756,7 @@ __git_complete_config_variable_name_and_value ()
 {
 	local cur_="$cur"
 
-	while test $# != 0; do
+	while test "$#" != 0; do
 		case "$1" in
 		--cur=*)	cur_="${1##--cur=}" ;;
 		*)		return 1 ;;
@@ -3096,7 +3096,7 @@ _git_stash ()
 		__gitcomp_builtin "stash_$subcommand"
 		;;
 	branch,*)
-		if [ $cword -eq $((__git_cmd_idx+2)) ]; then
+		if [ "$cword" -eq "$((__git_cmd_idx+2))" ]; then
 			__git_complete_refs
 		else
 			__gitcomp_nl "$(__git stash list \
@@ -3261,7 +3261,7 @@ _git_svn ()
 _git_tag ()
 {
 	local i c="$__git_cmd_idx" f=0
-	while [ $c -lt $cword ]; do
+	while [ "$c" -lt "$cword" ]; do
 		i="${words[c]}"
 		case "$i" in
 		-d|--delete|-v|--verify)
@@ -3279,7 +3279,7 @@ _git_tag ()
 	-m|-F)
 		;;
 	-*|tag)
-		if [ $f = 1 ]; then
+		if [ "$f" = 1 ]; then
 			__gitcomp_direct "$(__git_tags "" "$cur" " ")"
 		fi
 		;;
@@ -3342,7 +3342,7 @@ _git_worktree ()
 			# be either the 'add' subcommand, the unstuck
 			# argument of an option (e.g. branch for -b|-B), or
 			# the path for the new worktree.
-			if [ $cword -eq $((subcommand_idx+1)) ]; then
+			if [ "$cword" -eq "$((subcommand_idx+1))" ]; then
 				# Right after the 'add' subcommand: have to
 				# complete the path, so fall back to Bash
 				# filename completion.
@@ -3366,7 +3366,7 @@ _git_worktree ()
 		__git_complete_worktree_paths
 		;;
 	move,*)
-		if [ $cword -eq $((subcommand_idx+1)) ]; then
+		if [ "$cword" -eq "$((subcommand_idx+1))" ]; then
 			# The first parameter must be an existing working
 			# tree to be moved.
 			__git_complete_worktree_paths
@@ -3436,7 +3436,7 @@ __git_main ()
 	local __git_C_args C_args_count=0
 	local __git_cmd_idx
 
-	while [ $c -lt $cword ]; do
+	while [ "$c" -lt "$cword" ]; do
 		i="${words[c]}"
 		case "$i" in
 		--git-dir=*)
